@@ -1,0 +1,1 @@
+{{ with .Resources.Get "page.html" }}{{ .Content | safeHTML }}{{ else }}MISSING-RESOURCE-{{ .RelPermalink }}{{ end }}

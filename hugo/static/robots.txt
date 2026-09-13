@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /.agency/
+Disallow: /.project-manager/
+Disallow: /.git/
+Sitemap: https://airecorderguide.com/sitemap.xml

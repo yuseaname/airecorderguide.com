@@ -1,0 +1,8 @@
+baseURL = "https://airecorderguide.com/"
+languageCode = "en-us"
+title = "AI Recorder Guide"
+disableKinds = ["taxonomy", "term", "RSS", "sitemap"]
+disableHugoGeneratorInject = true
+enableGitInfo = false
+[build]
+  writeStats = false

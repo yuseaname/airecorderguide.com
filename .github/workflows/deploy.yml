@@ -1,0 +1,29 @@
+name: Deploy to Hostinger (rsync)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: "0.141.0"
+          extended: true
+      - run: hugo --minify
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOSTINGER_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -H -p 65002 "${{ secrets.HOSTINGER_SSH_HOST }}" >> ~/.ssh/known_hosts
+      - name: Deploy via rsync (keep .git from git-integration)
+        run: |
+          rsync -avz --delete --exclude=".git" --exclude=".hugo_build.lock" \
+            -e "ssh -i ~/.ssh/deploy_key -p 65002" \
+            ./public/ \
+            "${{ secrets.HOSTINGER_SSH_USER }}@${{ secrets.HOSTINGER_SSH_HOST }}:~/domains/airecorderguide.com/public_html/"

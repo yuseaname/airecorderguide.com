@@ -111,35 +111,15 @@ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',
     if (/faq|frequently/.test(t)) return 'faq';
     return t ? 'other' : 'pre_h2';
   }
-  function affDestination(a) {
-    var href = a.getAttribute('href') || '';
-    var dpM = /\/dp\/([A-Z0-9]{10})/.exec(href);
-    if (dpM) return dpM[1];
-    var skM = /[?&]k=([^&]*)/.exec(href);
-    if (skM) return 'search:' + decodeURIComponent(skM[1].replace(/\+/g, ' '));
-    return 'unknown';
-  }
-  function affFormat(a) {
-    if (a.closest('details[data-slot="accordion-item"]')) return 'list';
-    if (a.classList.contains('tool-btn') || a.classList.contains('tool-link')) return 'tool';
-    if (a.classList.contains('btn--ghost') || a.classList.contains('tool-btn')) return 'cta';
-    var sec = a.closest('section');
-    if (sec && sec.classList.contains('recommendation')) return 'box';
-    var li = a.closest('li');
-    if (li) return 'list';
-    return 'inline';
-  }
   document.addEventListener('click', function (e) {
     var a = e.target && e.target.closest ? e.target.closest('a') : null;
     if (!isAffiliate(a)) return;
     var all = Array.prototype.slice.call(document.querySelectorAll('a')).filter(isAffiliate);
-    track('affiliate_click', {
-      destination: affDestination(a),
-      format: affFormat(a),
-      position: all.indexOf(a) + 1,
+    track('outbound_affiliate_click', {
       page_type: pageType(),
       page_id: pageId(),
       keyword: keywordOf(a.getAttribute('href')),
+      position_slot: all.indexOf(a) + 1,
       section: sectionBucket(a)
     });
   }, { passive: true });
